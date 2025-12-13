@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Global Tool Configuration -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>trello-cli</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+
+    <!-- Package Info -->
+    <PackageId>TrelloCli</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>TrelloCli</Authors>
+    <Description>CLI tool for Trello with AI-friendly JSON output</Description>
+  </PropertyGroup>
+
+</Project>
