@@ -14,7 +14,7 @@
     <!-- Package Info -->
     <PackageId>TrelloCli</PackageId>
     <Version>1.0.0</Version>
-    <Authors>TrelloCli</Authors>
+    <Authors>Aygün Özgür</Authors>
     <Description>CLI tool for Trello with AI-friendly JSON output</Description>
   </PropertyGroup>
 

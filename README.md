@@ -13,20 +13,19 @@ A CLI tool that provides Trello integration with Claude Code. With this tool, yo
 
 ## Installation
 
-### Installing as a .NET Global Tool
+### Build from Source
 
 ```bash
-# Install from NuGet
-dotnet tool install --global TrelloCli
+# Clone the repository
+git clone https://github.com/ZenoxZX/trello-cli.git
+cd trello-cli
+
+# Install as global tool
+dotnet pack src/TrelloCli.csproj -c Release
+dotnet tool install --global --add-source src/nupkg TrelloCli
 
 # Verify installation
 trello-cli --help
-```
-
-### Updating
-
-```bash
-dotnet tool update --global TrelloCli
 ```
 
 ### Uninstalling
@@ -134,7 +133,7 @@ trello-cli --delete-card <card-id>
 
 ## Requirements
 
-- .NET 8.0 or later
+- .NET 6.0 or later
 - Trello account with API access
 
 ## License
