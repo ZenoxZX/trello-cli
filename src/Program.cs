@@ -66,6 +66,7 @@ var boardCmd = new BoardCommands(api);
 var listCmd = new ListCommands(api);
 var cardCmd = new CardCommands(api);
 var attachCmd = new AttachmentCommands(api);
+var checklistCmd = new ChecklistCommands(api);
 
 try
 {
@@ -186,6 +187,35 @@ async Task ExecuteCommand(string[] args)
             await attachCmd.DeleteAttachmentAsync(GetArg(args, 1), GetArg(args, 2));
             break;
 
+        // Checklist commands
+        case "--get-checklists":
+            await checklistCmd.GetChecklistsAsync(GetArg(args, 1));
+            break;
+
+        case "--create-checklist":
+            await checklistCmd.CreateChecklistAsync(GetArg(args, 1), GetArg(args, 2));
+            break;
+
+        case "--delete-checklist":
+            await checklistCmd.DeleteChecklistAsync(GetArg(args, 1));
+            break;
+
+        case "--add-checklist-item":
+            await checklistCmd.AddChecklistItemAsync(GetArg(args, 1), GetArg(args, 2));
+            break;
+
+        case "--update-checklist-item":
+            await checklistCmd.UpdateChecklistItemAsync(
+                GetArg(args, 1),
+                GetArg(args, 2),
+                GetArg(args, 3)
+            );
+            break;
+
+        case "--delete-checklist-item":
+            await checklistCmd.DeleteChecklistItemAsync(GetArg(args, 1), GetArg(args, 2));
+            break;
+
         default:
             OutputFormatter.Print(ApiResponse<object>.Fail($"Unknown command: {command}", "UNKNOWN_COMMAND"));
             break;
@@ -268,6 +298,14 @@ COMMANDS:
 
   Note: Downloading attachments is not supported. Trello's download API
   requires browser authentication. Use --attach-url to link attachments.
+
+  Checklist:
+    --get-checklists <card-id>                          Get checklists on a card
+    --create-checklist <card-id> <name>                 Create checklist on a card
+    --delete-checklist <checklist-id>                   Delete a checklist
+    --add-checklist-item <checklist-id> <name>          Add item to checklist
+    --update-checklist-item <card-id> <item-id> <state> Mark item complete/incomplete
+    --delete-checklist-item <checklist-id> <item-id>    Delete item from checklist
 
 OUTPUT:
   All responses are JSON: {{""ok"":true,""data"":...}} or {{""ok"":false,""error"":""...""}}
