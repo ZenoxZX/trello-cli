@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet run:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(trello-cli --create-list:*)",
+      "Bash(trello-cli --create-card:*)",
+      "Bash(trello-cli --create-checklist:*)",
+      "Bash(trello-cli --get-checklists:*)",
+      "Bash(trello-cli --delete-card:*)",
+      "Bash(trello-cli --add-checklist-item:*)",
+      "Bash(dotnet tool:*)",
+      "Bash(dotnet pack:*)",
+      "Bash(dotnet tool install:*)"
+    ]
+  }
+}
