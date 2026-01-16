@@ -60,3 +60,6 @@ bld/
 
 # Publish output
 publish/
+
+# Backup files
+*~
