@@ -23,6 +23,9 @@ All commands return JSON:
 | `FILE_NOT_FOUND` | Local file does not exist (for uploads) |
 | `UPLOAD_FAILED` | Attachment upload failed |
 | `ATTACH_FAILED` | URL attachment failed |
+| `CREATE_FAILED` | Failed to create resource |
+| `UPDATE_FAILED` | Failed to update resource |
+| `INVALID_PARAM` | Invalid parameter value |
 | `ERROR` | General error |
 
 ---
@@ -193,6 +196,60 @@ trello-cli --delete-attachment <card-id> <attachment-id>
 # Returns: {"ok":true,"data":true}
 ```
 
+### Checklist Operations
+
+#### Getting Checklists
+
+```bash
+# Get all checklists on a card
+trello-cli --get-checklists <card-id>
+# Returns: {"ok":true,"data":[{"id":"...","name":"My Checklist","idCard":"...","checkItems":[{"id":"...","name":"Item 1","state":"incomplete"},{"id":"...","name":"Item 2","state":"complete"}]}]}
+```
+
+#### Creating Checklists
+
+```bash
+# Create a checklist on a card
+trello-cli --create-checklist <card-id> "<checklist-name>"
+# Returns: {"ok":true,"data":{"id":"...","name":"My Checklist","idCard":"...","checkItems":[]}}
+```
+
+#### Deleting Checklists
+
+```bash
+# Delete a checklist
+trello-cli --delete-checklist <checklist-id>
+# Returns: {"ok":true,"data":true}
+```
+
+#### Adding Checklist Items
+
+```bash
+# Add an item to a checklist
+trello-cli --add-checklist-item <checklist-id> "<item-name>"
+# Returns: {"ok":true,"data":{"id":"...","name":"Item name","state":"incomplete","idChecklist":"..."}}
+```
+
+#### Updating Checklist Items
+
+```bash
+# Mark item as complete
+trello-cli --update-checklist-item <card-id> <item-id> complete
+# Returns: {"ok":true,"data":{"id":"...","name":"Item name","state":"complete",...}}
+
+# Mark item as incomplete
+trello-cli --update-checklist-item <card-id> <item-id> incomplete
+# Returns: {"ok":true,"data":{"id":"...","name":"Item name","state":"incomplete",...}}
+```
+
+#### Deleting Checklist Items
+
+```bash
+# Delete an item from a checklist
+trello-cli --delete-checklist-item <checklist-id> <item-id>
+# Returns: {"ok":true,"data":true}
+```
+
 ---
 
 ## Common Workflows
@@ -267,6 +324,27 @@ trello-cli --delete-attachment <card-id> <attachment-id>
 ```
 
 Note: To copy an attachment between cards, use `--list-attachments` on the source card to get the URL, then `--attach-url` on the target card.
+
+### 7. Work with Checklists
+
+```bash
+# Get existing checklists on a card
+trello-cli --get-checklists <card-id>
+
+# Create a new checklist
+trello-cli --create-checklist <card-id> "Implementation Tasks"
+
+# Add items to the checklist
+trello-cli --add-checklist-item <checklist-id> "Write unit tests"
+trello-cli --add-checklist-item <checklist-id> "Update documentation"
+trello-cli --add-checklist-item <checklist-id> "Code review"
+
+# Mark items as complete
+trello-cli --update-checklist-item <card-id> <item-id> complete
+
+# Delete a checklist when done
+trello-cli --delete-checklist <checklist-id>
+```
 
 ---
 
