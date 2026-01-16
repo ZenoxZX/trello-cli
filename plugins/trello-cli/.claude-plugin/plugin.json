@@ -1,0 +1,8 @@
+{
+  "name": "trello-cli",
+  "description": "Trello board, list, and card management via CLI. Activate when user mentions 'Trello'.",
+  "version": "1.0.0",
+  "author": {
+    "name": "jimdowning-cyclops"
+  }
+}

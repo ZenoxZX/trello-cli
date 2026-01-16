@@ -533,6 +533,162 @@ public class TrelloApiService
         }
     }
 
+    // Checklist operations
+    public async Task<ApiResponse<List<Checklist>>> GetChecklistsAsync(string cardId)
+    {
+        try
+        {
+            var url = BuildUrl($"/cards/{cardId}/checklists");
+            var response = await _http.GetStringAsync(url);
+            var checklists = JsonSerializer.Deserialize<List<Checklist>>(response) ?? new();
+            return ApiResponse<List<Checklist>>.Success(checklists);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<List<Checklist>>.Fail("Card not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<List<Checklist>>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<List<Checklist>>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<Checklist>> CreateChecklistAsync(string cardId, string name)
+    {
+        try
+        {
+            var url = BuildUrl("/checklists", $"idCard={cardId}&name={Uri.EscapeDataString(name)}");
+            var response = await _http.PostAsync(url, null);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            var checklist = JsonSerializer.Deserialize<Checklist>(content);
+            return checklist != null
+                ? ApiResponse<Checklist>.Success(checklist)
+                : ApiResponse<Checklist>.Fail("Failed to create checklist", "CREATE_FAILED");
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<Checklist>.Fail("Card not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<Checklist>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<Checklist>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<bool>> DeleteChecklistAsync(string checklistId)
+    {
+        try
+        {
+            var url = BuildUrl($"/checklists/{checklistId}");
+            var response = await _http.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+            return ApiResponse<bool>.Success(true);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<bool>.Fail("Checklist not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<ChecklistItem>> AddChecklistItemAsync(string checklistId, string name)
+    {
+        try
+        {
+            var url = BuildUrl($"/checklists/{checklistId}/checkItems", $"name={Uri.EscapeDataString(name)}");
+            var response = await _http.PostAsync(url, null);
+            response.EnsureSuccessStatusCode();
+            var content = await response.Content.ReadAsStringAsync();
+            var item = JsonSerializer.Deserialize<ChecklistItem>(content);
+            return item != null
+                ? ApiResponse<ChecklistItem>.Success(item)
+                : ApiResponse<ChecklistItem>.Fail("Failed to add checklist item", "CREATE_FAILED");
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<ChecklistItem>.Fail("Checklist not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<ChecklistItem>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<ChecklistItem>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<ChecklistItem>> UpdateChecklistItemAsync(string cardId, string checkItemId, string state)
+    {
+        try
+        {
+            var url = BuildUrl($"/cards/{cardId}/checkItem/{checkItemId}");
+            var formData = new Dictionary<string, string>
+            {
+                ["state"] = state
+            };
+            var content = new FormUrlEncodedContent(formData);
+            var response = await _http.PutAsync(url, content);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var item = JsonSerializer.Deserialize<ChecklistItem>(responseContent);
+            return item != null
+                ? ApiResponse<ChecklistItem>.Success(item)
+                : ApiResponse<ChecklistItem>.Fail("Failed to update checklist item", "UPDATE_FAILED");
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<ChecklistItem>.Fail("Card or checklist item not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<ChecklistItem>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<ChecklistItem>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<bool>> DeleteChecklistItemAsync(string checklistId, string checkItemId)
+    {
+        try
+        {
+            var url = BuildUrl($"/checklists/{checklistId}/checkItems/{checkItemId}");
+            var response = await _http.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+            return ApiResponse<bool>.Success(true);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<bool>.Fail("Checklist or item not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "ERROR");
+        }
+    }
+
     private static string GetMimeType(string filePath)
     {
         var ext = Path.GetExtension(filePath).ToLowerInvariant();

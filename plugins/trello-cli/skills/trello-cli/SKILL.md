@@ -46,6 +46,17 @@ trello-cli --delete-attachment <card-id> <attach-id>
 
 **Note:** Downloading attachments is not supported - Trello's download API requires browser authentication. Use `--attach-url` to link attachments between cards.
 
+### Checklists
+
+```bash
+trello-cli --get-checklists <card-id>                           # Get checklists on card
+trello-cli --create-checklist <card-id> "<name>"                # Create checklist
+trello-cli --delete-checklist <checklist-id>                    # Delete checklist
+trello-cli --add-checklist-item <checklist-id> "<name>"         # Add item
+trello-cli --update-checklist-item <card-id> <item-id> <state>  # complete/incomplete
+trello-cli --delete-checklist-item <checklist-id> <item-id>     # Delete item
+```
+
 ## Typical Workflows
 
 ### List All Tasks
@@ -96,3 +107,9 @@ For detailed command reference, see [REFERENCE.md](REFERENCE.md).
 
 **User:** "Link an attachment to another Trello card"
 → Run `--list-attachments <source-card-id>` to get the URL, then `--attach-url <target-card-id> <url>`
+
+**User:** "Add a checklist to this Trello card"
+→ Run `--create-checklist <card-id> "<checklist-name>"`, then `--add-checklist-item` for each item
+
+**User:** "Mark the checklist item as done on Trello"
+→ Run `--update-checklist-item <card-id> <item-id> complete`

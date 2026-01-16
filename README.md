@@ -13,14 +13,32 @@ A CLI tool that provides Trello integration with Claude Code. With this tool, yo
 
 ## Installation
 
-### Build from Source
+### Quick Install (Recommended)
+
+Install directly from GitHub using the install script. Requires [Homebrew](https://brew.sh).
+
+```bash
+# Clone and install
+git clone https://github.com/ZenoxZX/trello-cli.git
+cd trello-cli
+./install.sh
+```
+
+The install script will:
+- Install .NET SDK via Homebrew if needed
+- Build and install trello-cli as a global tool
+- Install Claude Code skills to `~/.claude/skills/`
+
+### Manual Build from Source
+
+If you prefer to install manually or don't use Homebrew:
 
 ```bash
 # Clone the repository
 git clone https://github.com/ZenoxZX/trello-cli.git
 cd trello-cli
 
-# Install as global tool
+# Install as global tool (requires .NET SDK 10.0+)
 dotnet pack src/TrelloCli.csproj -c Release
 dotnet tool install --global --add-source src/nupkg TrelloCli
 
@@ -31,6 +49,10 @@ trello-cli --help
 ### Uninstalling
 
 ```bash
+# Using uninstall script
+./uninstall.sh
+
+# Or manually
 dotnet tool uninstall --global TrelloCli
 ```
 
