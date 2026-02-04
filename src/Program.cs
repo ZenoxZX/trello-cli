@@ -136,14 +136,30 @@ async Task ExecuteCommand(string[] args)
             break;
 
         case "--update-card":
+            var closedArg = GetNamedArg(args, "--closed");
+            bool? closedValue = closedArg?.ToLower() switch
+            {
+                "true" => true,
+                "false" => false,
+                _ => null
+            };
             await cardCmd.UpdateCardAsync(
                 GetArg(args, 1),
                 GetNamedArg(args, "--name"),
                 GetNamedArg(args, "--desc"),
                 GetNamedArg(args, "--due"),
                 GetNamedArg(args, "--labels"),
-                GetNamedArg(args, "--members")
+                GetNamedArg(args, "--members"),
+                closedValue
             );
+            break;
+
+        case "--archive-card":
+            await cardCmd.ArchiveCardAsync(GetArg(args, 1));
+            break;
+
+        case "--unarchive-card":
+            await cardCmd.UnarchiveCardAsync(GetArg(args, 1));
             break;
 
         case "--move-card":
@@ -283,6 +299,9 @@ COMMANDS:
       [--due <date>]
       [--labels <ids>]
       [--members <ids>]
+      [--closed <true|false>]           Archive/unarchive card
+    --archive-card <card-id>            Archive card (shortcut for --update-card --closed true)
+    --unarchive-card <card-id>          Unarchive card (shortcut for --update-card --closed false)
     --move-card <card-id> <list-id>     Move card to list
     --delete-card <card-id>             Delete card
     --get-comments <card-id>            Get comments on a card

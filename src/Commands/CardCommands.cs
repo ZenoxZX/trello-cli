@@ -67,7 +67,7 @@ public class CardCommands
         OutputFormatter.Print(result);
     }
 
-    public async Task UpdateCardAsync(string cardId, string? name, string? desc, string? due, string? labels, string? members)
+    public async Task UpdateCardAsync(string cardId, string? name, string? desc, string? due, string? labels, string? members, bool? closed = null)
     {
         if (string.IsNullOrEmpty(cardId))
         {
@@ -75,7 +75,31 @@ public class CardCommands
             return;
         }
 
-        var result = await _api.UpdateCardAsync(cardId, name, desc, due, null, labels, members);
+        var result = await _api.UpdateCardAsync(cardId, name, desc, due, null, labels, members, closed);
+        OutputFormatter.Print(result);
+    }
+
+    public async Task ArchiveCardAsync(string cardId)
+    {
+        if (string.IsNullOrEmpty(cardId))
+        {
+            OutputFormatter.Print(ApiResponse<object>.Fail("Card ID required", "MISSING_PARAM"));
+            return;
+        }
+
+        var result = await _api.UpdateCardAsync(cardId, closed: true);
+        OutputFormatter.Print(result);
+    }
+
+    public async Task UnarchiveCardAsync(string cardId)
+    {
+        if (string.IsNullOrEmpty(cardId))
+        {
+            OutputFormatter.Print(ApiResponse<object>.Fail("Card ID required", "MISSING_PARAM"));
+            return;
+        }
+
+        var result = await _api.UpdateCardAsync(cardId, closed: false);
         OutputFormatter.Print(result);
     }
 
