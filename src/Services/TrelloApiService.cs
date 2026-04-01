@@ -93,6 +93,35 @@ public class TrelloApiService
         }
     }
 
+    public async Task<ApiResponse<TrelloList>> MoveListAsync(string listId, string pos)
+    {
+        try
+        {
+            var url = BuildUrl($"/lists/{listId}");
+            var formData = new Dictionary<string, string> { ["pos"] = pos };
+            var content = new FormUrlEncodedContent(formData);
+            var response = await _http.PutAsync(url, content);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var list = JsonSerializer.Deserialize<TrelloList>(responseContent);
+            return list != null
+                ? ApiResponse<TrelloList>.Success(list)
+                : ApiResponse<TrelloList>.Fail("Failed to move list", "UPDATE_FAILED");
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<TrelloList>.Fail("List not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<TrelloList>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<TrelloList>.Fail(ex.Message, "ERROR");
+        }
+    }
+
     public async Task<ApiResponse<TrelloList>> CreateListAsync(string boardId, string name)
     {
         try

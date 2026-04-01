@@ -113,6 +113,14 @@ async Task ExecuteCommand(string[] args)
             await listCmd.CreateListAsync(GetArg(args, 1), GetArg(args, 2));
             break;
 
+        case "--move-list":
+            await listCmd.MoveListAsync(GetArg(args, 1), GetArg(args, 2));
+            break;
+
+        case "--bulk-move-lists":
+            await listCmd.BulkMoveListsAsync(args[1..]);
+            break;
+
         // Card commands
         case "--get-cards":
             await cardCmd.GetCardsAsync(GetArg(args, 1));
@@ -285,6 +293,8 @@ COMMANDS:
   List:
     --get-lists <board-id>              Get lists in a board
     --create-list <board-id> <name>     Create new list
+    --move-list <list-id> <pos>         Move list to position (top, bottom, or a number)
+    --bulk-move-lists <id:pos>...       Move multiple lists, e.g. id1:top id2:bottom
 
   Card:
     --get-cards <list-id>               Get cards in a list
