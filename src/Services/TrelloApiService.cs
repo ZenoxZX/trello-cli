@@ -224,7 +224,7 @@ public class TrelloApiService
     }
 
     public async Task<ApiResponse<Card>> UpdateCardAsync(string cardId, string? name = null, string? desc = null,
-        string? due = null, string? listId = null, string? labels = null, string? members = null)
+        string? due = null, string? listId = null, string? labels = null, string? members = null, bool? closed = null)
     {
         try
         {
@@ -241,6 +241,8 @@ public class TrelloApiService
                 formData["idLabels"] = labels;
             if (members != null)
                 formData["idMembers"] = members;
+            if (closed.HasValue)
+                formData["closed"] = closed.Value.ToString().ToLower();
 
             if (formData.Count == 0)
                 return ApiResponse<Card>.Fail("No update parameters provided", "NO_PARAMS");

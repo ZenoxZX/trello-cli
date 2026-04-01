@@ -119,6 +119,10 @@ trello-cli --update-card <card-id> --name "<name>" --desc "<desc>" --due "<date>
 
 # Clear due date
 trello-cli --update-card <card-id> --due ""
+
+# Archive/unarchive card
+trello-cli --update-card <card-id> --closed true
+trello-cli --update-card <card-id> --closed false
 ```
 
 #### Moving Cards
@@ -128,10 +132,26 @@ trello-cli --update-card <card-id> --due ""
 trello-cli --move-card <card-id> <target-list-id>
 ```
 
+#### Archiving Cards
+
+```bash
+# Archive a card (set closed=true)
+trello-cli --archive-card <card-id>
+# Returns: {"ok":true,"data":{"id":"...","name":"...","closed":true,...}}
+
+# Unarchive a card (set closed=false)
+trello-cli --unarchive-card <card-id>
+# Returns: {"ok":true,"data":{"id":"...","name":"...","closed":false,...}}
+
+# Alternative: use --update-card with --closed flag
+trello-cli --update-card <card-id> --closed true
+trello-cli --update-card <card-id> --closed false
+```
+
 #### Deleting Cards
 
 ```bash
-# Delete card permanently
+# Delete card permanently (cannot be undone!)
 trello-cli --delete-card <card-id>
 # Returns: {"ok":true,"data":true}
 ```
