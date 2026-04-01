@@ -137,6 +137,11 @@ description: Trello board, list and card management via CLI...
 ## Command Summary
 
 ```bash
+# Authentication
+trello-cli --set-auth <api-key> <token>
+trello-cli --clear-auth
+trello-cli --check-auth
+
 # Board operations
 trello-cli --get-boards
 trello-cli --get-board <board-id>
@@ -146,9 +151,11 @@ trello-cli --get-lists <board-id>
 trello-cli --create-list <board-id> "<name>"
 
 # Card operations
+trello-cli --get-cards <list-id>
 trello-cli --get-all-cards <board-id>
+trello-cli --get-card <card-id>
 trello-cli --create-card <list-id> "<name>" [--desc "<desc>"] [--due "YYYY-MM-DD"]
-trello-cli --update-card <card-id> [--name "<name>"] [--desc "<desc>"] [--due "<date>"] [--closed <true|false>]
+trello-cli --update-card <card-id> [--name "<name>"] [--desc "<desc>"] [--due "<date>"] [--labels "<ids>"] [--members "<ids>"]
 trello-cli --move-card <card-id> <target-list-id>
 trello-cli --archive-card <card-id>
 trello-cli --unarchive-card <card-id>
@@ -166,6 +173,14 @@ trello-cli --delete-attachment <card-id> <attachment-id>
 
 # Note: Downloading attachments is not supported - Trello's download API
 # requires browser authentication. Use --attach-url to link attachments.
+
+# Checklist operations
+trello-cli --get-checklists <card-id>
+trello-cli --create-checklist <card-id> "<name>"
+trello-cli --delete-checklist <checklist-id>
+trello-cli --add-checklist-item <checklist-id> "<name>"
+trello-cli --update-checklist-item <card-id> <item-id> <complete|incomplete>
+trello-cli --delete-checklist-item <checklist-id> <item-id>
 ```
 
 ## Requirements
