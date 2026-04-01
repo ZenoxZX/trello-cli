@@ -30,7 +30,9 @@ trello-cli --create-card <list-id> "<name>"          # Create card
 trello-cli --create-card <list-id> "<name>" --desc "<desc>" --due "2025-01-15"
 trello-cli --update-card <card-id> --name "<name>" --desc "<desc>"
 trello-cli --move-card <card-id> <list-id>           # Move card
-trello-cli --delete-card <card-id>                   # Delete card
+trello-cli --archive-card <card-id>                  # Archive card
+trello-cli --unarchive-card <card-id>                # Unarchive card
+trello-cli --delete-card <card-id>                   # Delete card (permanent!)
 trello-cli --get-comments <card-id>                  # Get comments
 trello-cli --add-comment <card-id> "<text>"          # Add comment
 ```

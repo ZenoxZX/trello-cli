@@ -157,6 +157,8 @@ trello-cli --get-card <card-id>
 trello-cli --create-card <list-id> "<name>" [--desc "<desc>"] [--due "YYYY-MM-DD"]
 trello-cli --update-card <card-id> [--name "<name>"] [--desc "<desc>"] [--due "<date>"] [--labels "<ids>"] [--members "<ids>"]
 trello-cli --move-card <card-id> <target-list-id>
+trello-cli --archive-card <card-id>
+trello-cli --unarchive-card <card-id>
 trello-cli --delete-card <card-id>
 
 # Comment operations
