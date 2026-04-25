@@ -43,9 +43,15 @@ public class Label
     [JsonPropertyName("id")]
     public string Id { get; set; } = string.Empty;
 
+    [JsonPropertyName("idBoard")]
+    public string BoardId { get; set; } = string.Empty;
+
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("color")]
     public string? Color { get; set; }
+
+    [JsonPropertyName("uses")]
+    public int Uses { get; set; }
 }
