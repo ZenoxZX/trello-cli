@@ -154,12 +154,18 @@ trello-cli --create-list <board-id> "<name>"
 trello-cli --get-cards <list-id>
 trello-cli --get-all-cards <board-id>
 trello-cli --get-card <card-id>
-trello-cli --create-card <list-id> "<name>" [--desc "<desc>"] [--due "YYYY-MM-DD"]
+trello-cli --create-card <list-id> "<name>" [--desc "<desc>"] [--due "YYYY-MM-DD"] [--labels "<ids>"] [--members "<ids>"]
 trello-cli --update-card <card-id> [--name "<name>"] [--desc "<desc>"] [--due "<date>"] [--labels "<ids>"] [--members "<ids>"]
 trello-cli --move-card <card-id> <target-list-id>
 trello-cli --archive-card <card-id>
 trello-cli --unarchive-card <card-id>
 trello-cli --delete-card <card-id>
+
+# Label operations
+trello-cli --get-labels <board-id>
+trello-cli --create-label <board-id> "<name>" [--color <color>]
+trello-cli --update-label <label-id> [--name "<name>"] [--color <color>]
+trello-cli --delete-label <label-id>
 
 # Comment operations
 trello-cli --get-comments <card-id>
