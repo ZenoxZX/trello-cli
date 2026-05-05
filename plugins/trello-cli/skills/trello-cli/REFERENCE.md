@@ -100,6 +100,11 @@ trello-cli --create-card <list-id> "<card-name>" --due "2025-01-15"
 
 # Full card
 trello-cli --create-card <list-id> "<card-name>" --desc "<description>" --due "2025-01-15"
+
+# Card with labels and/or members (single API call - preferred over create-then-update)
+trello-cli --create-card <list-id> "<card-name>" --labels "<id1>,<id2>"
+trello-cli --create-card <list-id> "<card-name>" --members "<id1>,<id2>"
+trello-cli --create-card <list-id> "<card-name>" --desc "<desc>" --labels "<id1>" --members "<id1>"
 ```
 
 #### Updating Cards
@@ -172,6 +177,50 @@ trello-cli --get-comments <card-id>
 # Add a comment to a card
 trello-cli --add-comment <card-id> "<comment-text>"
 # Returns: {"ok":true,"data":{"id":"...","date":"...","data":{"text":"..."},"memberCreator":{"id":"...","fullName":"...","username":"..."}}}
+```
+
+### Label Operations
+
+#### Listing Labels
+
+```bash
+# List all labels on a board
+trello-cli --get-labels <board-id>
+# Returns: {"ok":true,"data":[{"id":"...","idBoard":"...","name":"bug","color":"red","uses":5}]}
+```
+
+#### Creating Labels
+
+```bash
+# Create a label with a color
+trello-cli --create-label <board-id> "<label-name>" --color <color>
+# Valid colors: green, yellow, orange, red, purple, blue, sky, lime, pink, black
+# Each accepts _light / _dark suffix (e.g. green_dark, red_light). Pass empty for no color.
+# Returns: {"ok":true,"data":{"id":"...","idBoard":"...","name":"...","color":"..."}}
+
+# Create a label with no color
+trello-cli --create-label <board-id> "<label-name>"
+```
+
+#### Updating Labels
+
+```bash
+# Rename a label
+trello-cli --update-label <label-id> --name "<new-name>"
+
+# Recolor a label
+trello-cli --update-label <label-id> --color <new-color>
+
+# Both at once
+trello-cli --update-label <label-id> --name "<new-name>" --color <new-color>
+```
+
+#### Deleting Labels
+
+```bash
+# Delete a label permanently (removes from all cards)
+trello-cli --delete-label <label-id>
+# Returns: {"ok":true,"data":true}
 ```
 
 ### Attachment Operations

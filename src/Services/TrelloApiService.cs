@@ -217,7 +217,7 @@ public class TrelloApiService
         }
     }
 
-    public async Task<ApiResponse<Card>> CreateCardAsync(string listId, string name, string? desc = null, string? due = null)
+    public async Task<ApiResponse<Card>> CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null)
     {
         try
         {
@@ -232,6 +232,10 @@ public class TrelloApiService
                 formData["desc"] = desc;
             if (!string.IsNullOrEmpty(due))
                 formData["due"] = due;
+            if (!string.IsNullOrEmpty(labels))
+                formData["idLabels"] = labels;
+            if (!string.IsNullOrEmpty(members))
+                formData["idMembers"] = members;
 
             var content = new FormUrlEncodedContent(formData);
             var response = await _http.PostAsync(url, content);
@@ -376,6 +380,120 @@ public class TrelloApiService
         catch (Exception ex)
         {
             return ApiResponse<Comment>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    // Label operations
+    public async Task<ApiResponse<List<Label>>> GetLabelsAsync(string boardId)
+    {
+        try
+        {
+            var url = BuildUrl($"/boards/{boardId}/labels", "limit=1000");
+            var response = await _http.GetStringAsync(url);
+            var labels = JsonSerializer.Deserialize<List<Label>>(response) ?? new();
+            return ApiResponse<List<Label>>.Success(labels);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<List<Label>>.Fail("Board not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<List<Label>>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<List<Label>>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<Label>> CreateLabelAsync(string boardId, string name, string? color)
+    {
+        try
+        {
+            var url = BuildUrl("/labels");
+            var formData = new Dictionary<string, string>
+            {
+                ["idBoard"] = boardId,
+                ["name"] = name,
+                ["color"] = string.IsNullOrEmpty(color) ? "" : color
+            };
+            var content = new FormUrlEncodedContent(formData);
+            var response = await _http.PostAsync(url, content);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var label = JsonSerializer.Deserialize<Label>(responseContent);
+            return label != null
+                ? ApiResponse<Label>.Success(label)
+                : ApiResponse<Label>.Fail("Failed to create label", "CREATE_FAILED");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<Label>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<Label>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<Label>> UpdateLabelAsync(string labelId, string? name, string? color)
+    {
+        try
+        {
+            var formData = new Dictionary<string, string>();
+            if (!string.IsNullOrEmpty(name))
+                formData["name"] = name;
+            if (color != null)
+                formData["color"] = color;
+
+            if (formData.Count == 0)
+                return ApiResponse<Label>.Fail("No update parameters provided", "NO_PARAMS");
+
+            var url = BuildUrl($"/labels/{labelId}");
+            var content = new FormUrlEncodedContent(formData);
+            var response = await _http.PutAsync(url, content);
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var label = JsonSerializer.Deserialize<Label>(responseContent);
+            return label != null
+                ? ApiResponse<Label>.Success(label)
+                : ApiResponse<Label>.Fail("Failed to update label", "UPDATE_FAILED");
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<Label>.Fail("Label not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<Label>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<Label>.Fail(ex.Message, "ERROR");
+        }
+    }
+
+    public async Task<ApiResponse<bool>> DeleteLabelAsync(string labelId)
+    {
+        try
+        {
+            var url = BuildUrl($"/labels/{labelId}");
+            var response = await _http.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+            return ApiResponse<bool>.Success(true);
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return ApiResponse<bool>.Fail("Label not found", "NOT_FOUND");
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "HTTP_ERROR");
+        }
+        catch (Exception ex)
+        {
+            return ApiResponse<bool>.Fail(ex.Message, "ERROR");
         }
     }
 

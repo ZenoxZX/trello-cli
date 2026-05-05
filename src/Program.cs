@@ -3,7 +3,7 @@ using TrelloCli.Models;
 using TrelloCli.Services;
 using TrelloCli.Utils;
 
-const string Version = "1.0.0";
+const string Version = "1.1.0";
 
 var config = new ConfigService();
 
@@ -67,6 +67,7 @@ var listCmd = new ListCommands(api);
 var cardCmd = new CardCommands(api);
 var attachCmd = new AttachmentCommands(api);
 var checklistCmd = new ChecklistCommands(api);
+var labelCmd = new LabelCommands(api);
 
 try
 {
@@ -139,7 +140,9 @@ async Task ExecuteCommand(string[] args)
                 GetArg(args, 1),
                 GetArg(args, 2),
                 GetNamedArg(args, "--desc"),
-                GetNamedArg(args, "--due")
+                GetNamedArg(args, "--due"),
+                GetNamedArg(args, "--labels"),
+                GetNamedArg(args, "--members")
             );
             break;
 
@@ -240,6 +243,31 @@ async Task ExecuteCommand(string[] args)
             await checklistCmd.DeleteChecklistItemAsync(GetArg(args, 1), GetArg(args, 2));
             break;
 
+        // Label commands
+        case "--get-labels":
+            await labelCmd.GetLabelsAsync(GetArg(args, 1));
+            break;
+
+        case "--create-label":
+            await labelCmd.CreateLabelAsync(
+                GetArg(args, 1),
+                GetArg(args, 2),
+                GetNamedArg(args, "--color")
+            );
+            break;
+
+        case "--update-label":
+            await labelCmd.UpdateLabelAsync(
+                GetArg(args, 1),
+                GetNamedArg(args, "--name"),
+                GetNamedArg(args, "--color")
+            );
+            break;
+
+        case "--delete-label":
+            await labelCmd.DeleteLabelAsync(GetArg(args, 1));
+            break;
+
         default:
             OutputFormatter.Print(ApiResponse<object>.Fail($"Unknown command: {command}", "UNKNOWN_COMMAND"));
             break;
@@ -303,6 +331,8 @@ COMMANDS:
     --create-card <list-id> <name>      Create card
       [--desc <description>]
       [--due <date>]
+      [--labels <ids>]                  Comma-separated label IDs
+      [--members <ids>]                 Comma-separated member IDs
     --update-card <card-id>             Update card
       [--name <name>]
       [--desc <description>]
@@ -327,6 +357,15 @@ COMMANDS:
 
   Note: Downloading attachments is not supported. Trello's download API
   requires browser authentication. Use --attach-url to link attachments.
+
+  Label:
+    --get-labels <board-id>                          List labels on a board
+    --create-label <board-id> <name>                 Create label on a board
+      [--color <color>]                              Trello color name (e.g. green, red, blue, orange...)
+    --update-label <label-id>                        Update label
+      [--name <name>]
+      [--color <color>]
+    --delete-label <label-id>                        Delete label
 
   Checklist:
     --get-checklists <card-id>                          Get checklists on a card

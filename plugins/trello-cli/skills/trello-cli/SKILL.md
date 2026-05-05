@@ -28,6 +28,7 @@ trello-cli --get-lists <board-id>                    # Get lists in board
 trello-cli --get-all-cards <board-id>                # All cards in board
 trello-cli --create-card <list-id> "<name>"          # Create card
 trello-cli --create-card <list-id> "<name>" --desc "<desc>" --due "2025-01-15"
+trello-cli --create-card <list-id> "<name>" --labels "<id1>,<id2>" --members "<id1>,<id2>"
 trello-cli --update-card <card-id> --name "<name>" --desc "<desc>"
 trello-cli --move-card <card-id> <list-id>           # Move card
 trello-cli --archive-card <card-id>                  # Archive card
@@ -35,6 +36,15 @@ trello-cli --unarchive-card <card-id>                # Unarchive card
 trello-cli --delete-card <card-id>                   # Delete card (permanent!)
 trello-cli --get-comments <card-id>                  # Get comments
 trello-cli --add-comment <card-id> "<text>"          # Add comment
+```
+
+### Labels
+
+```bash
+trello-cli --get-labels <board-id>                              # List labels on board
+trello-cli --create-label <board-id> "<name>" --color <color>   # Create label
+trello-cli --update-label <label-id> --name "<name>" --color <color>
+trello-cli --delete-label <label-id>                            # Delete label
 ```
 
 ### Attachments

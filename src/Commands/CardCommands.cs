@@ -49,7 +49,7 @@ public class CardCommands
         OutputFormatter.Print(result);
     }
 
-    public async Task CreateCardAsync(string listId, string name, string? desc = null, string? due = null)
+    public async Task CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null)
     {
         if (string.IsNullOrEmpty(listId))
         {
@@ -63,7 +63,7 @@ public class CardCommands
             return;
         }
 
-        var result = await _api.CreateCardAsync(listId, name, desc, due);
+        var result = await _api.CreateCardAsync(listId, name, desc, due, labels, members);
         OutputFormatter.Print(result);
     }
 

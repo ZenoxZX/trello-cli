@@ -53,6 +53,7 @@ trello-cli --get-card <card-id>
 trello-cli --create-card <list-id> "<card-name>"
 trello-cli --create-card <list-id> "<card-name>" --desc "<description>"
 trello-cli --create-card <list-id> "<card-name>" --desc "<description>" --due "2025-01-15"
+trello-cli --create-card <list-id> "<card-name>" --labels "<id1>,<id2>" --members "<id1>,<id2>"
 
 # Update a card
 trello-cli --update-card <card-id> --name "<new-name>"
@@ -71,6 +72,24 @@ trello-cli --get-comments <card-id>
 
 # Add a comment to a card
 trello-cli --add-comment <card-id> "<comment-text>"
+```
+
+### Label Operations
+
+```bash
+# List all labels on a board
+trello-cli --get-labels <board-id>
+
+# Create a new label
+trello-cli --create-label <board-id> "<label-name>" --color <color>
+# Valid colors: green, yellow, orange, red, purple, blue, sky, lime, pink, black
+# Suffix _light or _dark also valid (e.g. green_dark, red_light). Empty color = no color.
+
+# Update a label
+trello-cli --update-label <label-id> --name "<new-name>" --color <new-color>
+
+# Delete a label
+trello-cli --delete-label <label-id>
 ```
 
 ## Response Examples
