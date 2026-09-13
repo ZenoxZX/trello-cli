@@ -197,3 +197,29 @@ trello-cli --delete-checklist-item <checklist-id> <item-id>
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+## Card position
+
+Pass `--pos top`, `--pos bottom`, or a positive numeric position (for example,
+`--pos 123.5`) when creating, moving, or updating a card:
+
+```bash
+trello-cli --create-card <list-id> "New task" --pos top
+trello-cli --move-card <card-id> <list-id> --pos bottom
+trello-cli --update-card <card-id> --pos 123.5
+```
+
+Creation sends the position in the same request as the new card. Moving applies
+it within the destination list; updating changes the position in the current
+list without requiring another field. Omitting `--pos` preserves the existing
+behavior. Numeric positions use a decimal point, not a comma. Missing, invalid,
+or repeated values return `INVALID_PARAM` and exit code 1 before an API request.
+
+Run the offline regression checks with .NET 10:
+
+```bash
+dotnet run --project tests/PositionTests.csproj
+```
+
+The checks intercept HTTP requests and use dummy credentials; they do not
+create or modify real Trello cards.

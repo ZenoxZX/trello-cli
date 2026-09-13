@@ -3,7 +3,7 @@ using TrelloCli.Models;
 using TrelloCli.Services;
 using TrelloCli.Utils;
 
-const string Version = "1.1.0";
+const string Version = "1.2.0";
 
 var config = new ConfigService();
 
@@ -82,6 +82,17 @@ async Task ExecuteCommand(string[] args)
 {
     var command = args[0];
 
+    string? position = null;
+    if (command is "--create-card" or "--update-card" or "--move-card")
+    {
+        if (!CardPosition.TryRead(args, out position, out var positionError))
+        {
+            OutputFormatter.Print(ApiResponse<object>.Fail(positionError!, "INVALID_PARAM"));
+            Environment.ExitCode = 1;
+            return;
+        }
+    }
+
     switch (command)
     {
         // Auth
@@ -142,7 +153,8 @@ async Task ExecuteCommand(string[] args)
                 GetNamedArg(args, "--desc"),
                 GetNamedArg(args, "--due"),
                 GetNamedArg(args, "--labels"),
-                GetNamedArg(args, "--members")
+                GetNamedArg(args, "--members"),
+                position
             );
             break;
 
@@ -161,7 +173,8 @@ async Task ExecuteCommand(string[] args)
                 GetNamedArg(args, "--due"),
                 GetNamedArg(args, "--labels"),
                 GetNamedArg(args, "--members"),
-                closedValue
+                closedValue,
+                position
             );
             break;
 
@@ -174,7 +187,7 @@ async Task ExecuteCommand(string[] args)
             break;
 
         case "--move-card":
-            await cardCmd.MoveCardAsync(GetArg(args, 1), GetArg(args, 2));
+            await cardCmd.MoveCardAsync(GetArg(args, 1), GetArg(args, 2), position);
             break;
 
         case "--delete-card":
@@ -333,6 +346,7 @@ COMMANDS:
       [--due <date>]
       [--labels <ids>]                  Comma-separated label IDs
       [--members <ids>]                 Comma-separated member IDs
+      [--pos <top|bottom|number>]        Position in the list
     --update-card <card-id>             Update card
       [--name <name>]
       [--desc <description>]
@@ -340,9 +354,11 @@ COMMANDS:
       [--labels <ids>]
       [--members <ids>]
       [--closed <true|false>]           Archive/unarchive card
+      [--pos <top|bottom|number>]        Reorder within the current list
     --archive-card <card-id>            Archive card (shortcut for --update-card --closed true)
     --unarchive-card <card-id>          Unarchive card (shortcut for --update-card --closed false)
     --move-card <card-id> <list-id>     Move card to list
+      [--pos <top|bottom|number>]        Position in the destination list
     --delete-card <card-id>             Delete card
     --get-comments <card-id>            Get comments on a card
     --add-comment <card-id> <text>      Add comment to a card
@@ -382,6 +398,8 @@ EXAMPLES:
   trello-cli --get-boards
   trello-cli --get-board abc123
   trello-cli --create-card xyz789 ""My Task"" --desc ""Details""
-  trello-cli --move-card card123 list456
+  trello-cli --move-card card123 list456 --pos top
+  trello-cli --update-card card123 --pos bottom
+  trello-cli --create-card xyz789 ""New task"" --pos top
 ");
 }

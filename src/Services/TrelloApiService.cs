@@ -217,7 +217,7 @@ public class TrelloApiService
         }
     }
 
-    public async Task<ApiResponse<Card>> CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null)
+    public async Task<ApiResponse<Card>> CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null, string? pos = null)
     {
         try
         {
@@ -236,6 +236,8 @@ public class TrelloApiService
                 formData["idLabels"] = labels;
             if (!string.IsNullOrEmpty(members))
                 formData["idMembers"] = members;
+            if (pos != null)
+                formData["pos"] = pos;
 
             var content = new FormUrlEncodedContent(formData);
             var response = await _http.PostAsync(url, content);
@@ -257,7 +259,7 @@ public class TrelloApiService
     }
 
     public async Task<ApiResponse<Card>> UpdateCardAsync(string cardId, string? name = null, string? desc = null,
-        string? due = null, string? listId = null, string? labels = null, string? members = null, bool? closed = null)
+        string? due = null, string? listId = null, string? labels = null, string? members = null, bool? closed = null, string? pos = null)
     {
         try
         {
@@ -274,6 +276,8 @@ public class TrelloApiService
                 formData["idLabels"] = labels;
             if (members != null)
                 formData["idMembers"] = members;
+            if (pos != null)
+                formData["pos"] = pos;
             if (closed.HasValue)
                 formData["closed"] = closed.Value.ToString().ToLower();
 
@@ -304,9 +308,9 @@ public class TrelloApiService
         }
     }
 
-    public async Task<ApiResponse<Card>> MoveCardAsync(string cardId, string listId)
+    public async Task<ApiResponse<Card>> MoveCardAsync(string cardId, string listId, string? pos = null)
     {
-        return await UpdateCardAsync(cardId, listId: listId);
+        return await UpdateCardAsync(cardId, listId: listId, pos: pos);
     }
 
     public async Task<ApiResponse<bool>> DeleteCardAsync(string cardId)
