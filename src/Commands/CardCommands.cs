@@ -49,7 +49,7 @@ public class CardCommands
         OutputFormatter.Print(result);
     }
 
-    public async Task CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null)
+    public async Task CreateCardAsync(string listId, string name, string? desc = null, string? due = null, string? labels = null, string? members = null, string? pos = null)
     {
         if (string.IsNullOrEmpty(listId))
         {
@@ -63,11 +63,11 @@ public class CardCommands
             return;
         }
 
-        var result = await _api.CreateCardAsync(listId, name, desc, due, labels, members);
+        var result = await _api.CreateCardAsync(listId, name, desc, due, labels, members, pos);
         OutputFormatter.Print(result);
     }
 
-    public async Task UpdateCardAsync(string cardId, string? name, string? desc, string? due, string? labels, string? members, bool? closed = null)
+    public async Task UpdateCardAsync(string cardId, string? name, string? desc, string? due, string? labels, string? members, bool? closed = null, string? pos = null)
     {
         if (string.IsNullOrEmpty(cardId))
         {
@@ -75,7 +75,7 @@ public class CardCommands
             return;
         }
 
-        var result = await _api.UpdateCardAsync(cardId, name, desc, due, null, labels, members, closed);
+        var result = await _api.UpdateCardAsync(cardId, name, desc, due, null, labels, members, closed, pos);
         OutputFormatter.Print(result);
     }
 
@@ -103,7 +103,7 @@ public class CardCommands
         OutputFormatter.Print(result);
     }
 
-    public async Task MoveCardAsync(string cardId, string listId)
+    public async Task MoveCardAsync(string cardId, string listId, string? pos = null)
     {
         if (string.IsNullOrEmpty(cardId))
         {
@@ -117,7 +117,7 @@ public class CardCommands
             return;
         }
 
-        var result = await _api.MoveCardAsync(cardId, listId);
+        var result = await _api.MoveCardAsync(cardId, listId, pos);
         OutputFormatter.Print(result);
     }
 
